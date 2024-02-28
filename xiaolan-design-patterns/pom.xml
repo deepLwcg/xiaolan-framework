@@ -7,7 +7,7 @@
         <groupId>buzz.xiaolan</groupId>
         <artifactId>xiaolan-framework-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../xiaolan-framework-parent</relativePath>
     </parent>
 
     <artifactId>xiaolan-design-patterns</artifactId>
@@ -22,7 +22,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <dependencies>
-
     </dependencies>
+
 
 </project>

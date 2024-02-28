@@ -1,4 +1,4 @@
-package buzz.xiaolan.designpatterns.factory;
+package buzz.xiaolan.designpatterns.factorypattern;
 
 import lombok.extern.slf4j.Slf4j;
 

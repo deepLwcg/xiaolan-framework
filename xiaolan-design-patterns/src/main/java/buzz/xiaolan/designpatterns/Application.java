@@ -1,7 +1,5 @@
 package buzz.xiaolan.designpatterns;
 
-import java.util.List;
-
 /**
  * @Author Wang Chenguang
  * @Email wcg.chen@foxmail.com

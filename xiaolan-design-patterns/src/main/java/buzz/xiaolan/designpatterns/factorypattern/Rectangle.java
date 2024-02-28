@@ -1,11 +1,11 @@
-package buzz.xiaolan.designpatterns.abstractfactory;
+package buzz.xiaolan.designpatterns.factorypattern;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author Wang Chenguang
  * @Email wcg.chen@foxmail.com
- * @Date 2024/2/28 00:17
+ * @Date 2024/2/27 22:46
  * @Description Rectangle
  */
 @Slf4j

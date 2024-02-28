@@ -1,4 +1,4 @@
-package buzz.xiaolan.designpatterns.factory;
+package buzz.xiaolan.designpatterns.factorypattern;
 
 /**
  * @Author Wang Chenguang

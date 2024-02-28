@@ -1,4 +1,4 @@
-package buzz.xiaolan.designpatterns.abstractfactory;
+package buzz.xiaolan.designpatterns.abstractfactorypattern;
 
 
 
