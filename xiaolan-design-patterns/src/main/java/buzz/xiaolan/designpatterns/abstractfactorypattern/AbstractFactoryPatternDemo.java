@@ -6,7 +6,7 @@ package buzz.xiaolan.designpatterns.abstractfactorypattern;
  * @Date 2024/2/28 00:08
  * @Description AbstractFactoryDemo
  */
-public class AbstractFactoryDemo {
+public class AbstractFactoryPatternDemo {
 
     public static void main(String[] args) {
 

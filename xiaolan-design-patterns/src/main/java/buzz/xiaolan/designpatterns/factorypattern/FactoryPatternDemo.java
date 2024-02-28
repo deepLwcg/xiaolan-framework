@@ -6,7 +6,7 @@ package buzz.xiaolan.designpatterns.factorypattern;
  * @Date 2024/2/27 22:41
  * @Description 工程模式
  */
-public class FactoryModeDemo {
+public class FactoryPatternDemo {
 
     public static void main(String[] args) {
 
