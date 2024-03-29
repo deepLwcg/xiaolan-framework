@@ -17,6 +17,9 @@
         <module>xiaolan-design-patterns</module>
         <module>xiaolan-plugins</module>
         <module>xiaolan-bundle</module>
+        <module>xiaolan-poi</module>
+        <module>xiaolan-floating-box</module>
+        <module>xiaolan-security</module>
     </modules>
 
     <properties>

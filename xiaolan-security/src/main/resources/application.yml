@@ -1,0 +1,30 @@
+server:
+  port: 19800
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/security?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+  messages:
+    basename: i18n/messages
+  thymeleaf:
+    enabled: false
+    encoding: UTF-8
+  mvc:
+    throw-exception-if-no-handler-found: true
+    static-path-pattern:
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  global-config:
+    banner: off
+    db-config:
+      id-type: assign_uuid
+  type-aliases-package: buzz.xiaolan.security.entity
+  check-config-location: false
+
+
+
