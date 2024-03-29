@@ -3,6 +3,7 @@ package buzz.xiaolan.security.security;
 import buzz.xiaolan.security.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.Collections;
  */
 @Slf4j
 @Getter
+@NoArgsConstructor
 public class UserInfo implements UserDetails {
     @JsonProperty("id")
     private String id;
@@ -35,9 +37,6 @@ public class UserInfo implements UserDetails {
     private String phone;
     @JsonProperty("is_enabled")
     private Boolean isEnabled;
-
-    public UserInfo() {
-    }
 
     public UserInfo(User user) {
         this.id = user.getId();
