@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.processor;
 
 import lombok.NonNull;
 import lombok.Setter;
@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletRequest;
  * @Description OauthEmailProcessor
  */
 @Component
-public class OauthEmailProcessor extends AbstractOauthProcessor{
+public class OauthEmailProcessor extends AbstractOauthProcessor {
     protected OauthEmailProcessor() {
         super(new AntPathRequestMatcher("/oauth/email","POST"));
     }
 
     @Override
-    protected Authentication authentication(@NonNull HttpServletRequest request) {
+    public Authentication authentication(@NonNull HttpServletRequest request) {
         EmailInfo emailInfo = this.getBodyJson(request, EmailInfo.class);
         UsernamePasswordAuthenticationToken unauthenticated = UsernamePasswordAuthenticationToken.unauthenticated(emailInfo.getEmail(), emailInfo.getPassword());
         unauthenticated.setDetails(this.authenticationDetailsSource.buildDetails(request));

@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.handler;
 
 import buzz.xiaolan.security.dto.ApiResponse;
 import buzz.xiaolan.security.exception.StatusCode;

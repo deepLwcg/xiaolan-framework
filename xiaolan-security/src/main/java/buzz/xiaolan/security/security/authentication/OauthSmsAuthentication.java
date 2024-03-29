@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 

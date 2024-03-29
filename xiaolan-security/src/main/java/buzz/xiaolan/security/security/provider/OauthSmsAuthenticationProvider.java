@@ -1,7 +1,10 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.provider;
 
 import buzz.xiaolan.security.entity.User;
 import buzz.xiaolan.security.exception.StatusCode;
+import buzz.xiaolan.security.security.authentication.OauthSmsAuthentication;
+import buzz.xiaolan.security.security.OauthUserDetailsService;
+import buzz.xiaolan.security.security.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

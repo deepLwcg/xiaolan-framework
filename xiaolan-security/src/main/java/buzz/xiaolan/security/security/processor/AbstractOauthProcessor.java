@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.processor;
 
 import buzz.xiaolan.security.exception.StatusCode;
 import buzz.xiaolan.security.utils.JsonUtils;
@@ -40,10 +40,10 @@ public abstract class AbstractOauthProcessor {
     }
 
 
-    protected abstract Authentication authentication(@NonNull HttpServletRequest request);
+    public abstract Authentication authentication(@NonNull HttpServletRequest request);
 
 
-    protected boolean match(HttpServletRequest request) {
+    public boolean match(HttpServletRequest request) {
         return requestMatcher.matches(request);
     }
 

@@ -1,6 +1,7 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.filter;
 
 import buzz.xiaolan.security.exception.StatusCode;
+import buzz.xiaolan.security.security.processor.AbstractOauthProcessor;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;

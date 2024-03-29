@@ -1,6 +1,12 @@
 package buzz.xiaolan.security.config;
 
 import buzz.xiaolan.security.security.*;
+import buzz.xiaolan.security.security.filter.OauthAuthenticationProcessingFilter;
+import buzz.xiaolan.security.security.handler.OauthAuthenticationFailureHandler;
+import buzz.xiaolan.security.security.handler.OauthAuthenticationSuccessHandler;
+import buzz.xiaolan.security.security.processor.OauthEmailProcessor;
+import buzz.xiaolan.security.security.processor.OauthSmsProcessor;
+import buzz.xiaolan.security.security.provider.OauthSmsAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;

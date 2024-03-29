@@ -1,7 +1,7 @@
 package buzz.xiaolan.security.config;
 
-import buzz.xiaolan.security.security.OauthAuthenticationProcessingFilter;
-import buzz.xiaolan.security.security.OauthSecurityContextHolderFilter;
+import buzz.xiaolan.security.security.filter.OauthAuthenticationProcessingFilter;
+import buzz.xiaolan.security.security.filter.OauthSecurityContextHolderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

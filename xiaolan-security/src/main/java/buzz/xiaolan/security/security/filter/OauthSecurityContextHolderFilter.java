@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.filter;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;

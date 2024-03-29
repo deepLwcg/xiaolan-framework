@@ -1,5 +1,6 @@
-package buzz.xiaolan.security.security;
+package buzz.xiaolan.security.security.processor;
 
+import buzz.xiaolan.security.security.authentication.OauthSmsAuthentication;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class OauthSmsProcessor extends AbstractOauthProcessor {
     }
 
     @Override
-    protected Authentication authentication(@NotNull HttpServletRequest request) {
+    public Authentication authentication(@NotNull HttpServletRequest request) {
         PhoneInfo phoneInfo = getBodyJson(request, PhoneInfo.class);
         OauthSmsAuthentication authentication = OauthSmsAuthentication.unauthenticated(phoneInfo.getPhone(), phoneInfo.getCode());
         authentication.setDetails(this.authenticationDetailsSource.buildDetails(request));
