@@ -101,7 +101,12 @@ public class JwtManager {
      * @author Wang Chenguang
      */
     public static Boolean verify(String token) {
-        return JWTUtil.verify(token, KEY.getBytes(StandardCharsets.UTF_8));
+        try {
+            return JWTUtil.verify(token, KEY.getBytes(StandardCharsets.UTF_8));
+        }catch (Exception ex){
+            log.warn(ex.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -112,7 +117,12 @@ public class JwtManager {
      * @author Wang Chenguang
      */
     public static Boolean verifyRefresh(String token) {
-        return JWTUtil.verify(token, REFRESH_KEY.getBytes(StandardCharsets.UTF_8));
+       try {
+           return JWTUtil.verify(token, REFRESH_KEY.getBytes(StandardCharsets.UTF_8));
+       }catch (Exception ex){
+           log.warn(ex.getMessage());
+           return false;
+       }
     }
 
 
@@ -135,7 +145,7 @@ public class JwtManager {
             JWTValidator.of(token).validateDate();
             return true;
         } catch (Exception ex) {
-            log.error("Token has expired.", ex);
+            log.error("Token has expired: {}", ex.getMessage());
             return false;
         }
     }

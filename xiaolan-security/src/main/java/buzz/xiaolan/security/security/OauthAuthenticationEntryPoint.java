@@ -27,6 +27,7 @@ public class OauthAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.error("OauthAuthenticationEntryPoint commence: {}", authException.getMessage());
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         String json = JsonUtils.toJson(ApiResponse.fail(StatusCode.AUTHENTICATION_ENTRY_POINT));
+        response.setStatus(StatusCode.AUTHENTICATION_ENTRY_POINT.getStatus().value());
         response.getWriter().write(json);
     }
 }

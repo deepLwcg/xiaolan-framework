@@ -1,6 +1,7 @@
 package buzz.xiaolan.security.config;
 
 import buzz.xiaolan.security.security.OauthAuthenticationProcessingFilter;
+import buzz.xiaolan.security.security.OauthSecurityContextHolderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,7 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 /**
@@ -26,9 +30,11 @@ import org.springframework.security.web.context.SecurityContextRepository;
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityContextRepository securityContextRepository;
+    private ChangeSessionIdAuthenticationStrategy changeSessionIdAuthenticationStrategy;
     private OauthAuthenticationProcessingFilter oauthAuthenticationProcessingFilter;
     private AccessDeniedHandler accessDeniedHandler;
     private AuthenticationEntryPoint authenticationEntryPoint;
+    private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -45,13 +51,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .cors().disable()
                 .httpBasic().disable()
-                .anonymous().disable()
-                .securityContext().securityContextRepository(securityContextRepository)
+                .securityContext().securityContextRepository(securityContextRepository).disable()
+                .rememberMe().disable()
+                .sessionManagement()
+                .sessionAuthenticationStrategy(changeSessionIdAuthenticationStrategy)
                 .and()
                 .authorizeRequests()
-                .antMatchers("login").permitAll()
+                .antMatchers("/oauth/**", "/api/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterAt(new OauthSecurityContextHolderFilter(securityContextRepository,authenticationFailureHandler), SecurityContextHolderFilter.class)
                 .addFilterBefore(oauthAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
@@ -76,5 +85,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setAuthenticationEntryPoint(AuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+
+    @Autowired
+    public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.authenticationFailureHandler = authenticationFailureHandler;
+    }
+
+    @Autowired
+    public void setChangeSessionIdAuthenticationStrategy(ChangeSessionIdAuthenticationStrategy changeSessionIdAuthenticationStrategy) {
+        this.changeSessionIdAuthenticationStrategy = changeSessionIdAuthenticationStrategy;
     }
 }

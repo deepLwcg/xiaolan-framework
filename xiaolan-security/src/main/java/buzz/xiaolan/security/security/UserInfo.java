@@ -1,6 +1,8 @@
 package buzz.xiaolan.security.security;
 
 import buzz.xiaolan.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +17,39 @@ import java.util.Collections;
  * @Description UserInfo
  */
 @Slf4j
-public record UserInfo(String id, User user) implements UserDetails {
+@Getter
+public class UserInfo implements UserDetails {
+    @JsonProperty("id")
+    private String id;
+    @JsonProperty("username")
+    private String username;
+    @JsonProperty("password")
+    private String password;
+    @JsonProperty("nickname")
+    private String nickname;
+    @JsonProperty("avatar")
+    private String avatar;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("phone")
+    private String phone;
+    @JsonProperty("is_enabled")
+    private Boolean isEnabled;
 
+    public UserInfo() {
+    }
 
     public UserInfo(User user) {
-        this(user.getId(), user);
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.nickname = user.getNickname();
+        this.avatar = user.getAvatar();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
+        this.isEnabled = user.getIsEnabled();
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,12 +58,12 @@ public record UserInfo(String id, User user) implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return this.username;
     }
 
     @Override
@@ -54,6 +83,6 @@ public record UserInfo(String id, User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getIsEnabled();
+        return this.isEnabled;
     }
 }

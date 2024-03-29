@@ -30,12 +30,13 @@ public class OauthAuthenticationSuccessHandler implements AuthenticationSuccessH
         if (principal instanceof UserInfo userInfo) {
             DateTime dateTime = DateUtil.date();
             DateTime expiresAt = DateUtil.offsetHour(dateTime, 6);
-            String accessToken = JwtManager.generatedToken(Map.<String, String>of("id", userInfo.id()), expiresAt);
-            String refreshToken = JwtManager.generatedRefreshToken(Map.<String, String>of("id", userInfo.id()));
+            String accessToken = JwtManager.generatedToken(Map.<String, String>of("id", userInfo.getId()), expiresAt);
+            String refreshToken = JwtManager.generatedRefreshToken(Map.<String, String>of("id", userInfo.getId()));
             String json = JsonUtils.toJson(ApiResponse.success(AccessToken.of(accessToken, refreshToken, expiresAt.getTime())));
             response.getWriter().write(json);
             return;
         }
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(JsonUtils.toJson(ApiResponse.fail(StatusCode.AUTHENTICATION_FAILURE)));
     }
 }

@@ -1,16 +1,17 @@
 package buzz.xiaolan.security.security;
 
 import buzz.xiaolan.security.entity.User;
+import buzz.xiaolan.security.exception.StatusCode;
 import buzz.xiaolan.security.mapper.UserMapper;
-import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @Author Wang Chenguang
@@ -21,32 +22,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class OauthUserDetailsService extends ServiceImpl<UserMapper, User> implements UserDetailsService, IService<User> {
 
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = User.builder()
-                .id(IdUtil.simpleUUID())
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
+        User user = getOne(new QueryWrapper<>(User.builder()
                 .isEnabled(true)
-                .build();
+                .email(email)
+                .build()));
+        if (user == null) {
+            throw new UsernameNotFoundException(StatusCode.AUTHENTICATION_USER_NOT_FOUND.name());
+        }
         return new UserInfo(user);
     }
 
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public UserDetails getUserDetails(String id) {
-        User user = User.builder()
-                .id(IdUtil.simpleUUID())
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
-                .isEnabled(true)
-                .build();
-        return new UserInfo(user);
+    public UserDetails getUserDetailsById(String id) {
+        return Optional.ofNullable(getById(id)).map(UserInfo::new).orElse(null);
     }
 
 }

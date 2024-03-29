@@ -1,9 +1,11 @@
 package buzz.xiaolan.security.security;
 
+import buzz.xiaolan.security.exception.StatusCode;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContext;
@@ -39,23 +41,24 @@ public class OauthSecurityContextRepository implements SecurityContextRepository
         log.info("loadContext");
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         String token = this.getAuthorizationToken(requestResponseHolder.getRequest());
-        try {
-            if (JwtManager.verify(token) && JwtManager.validateDate(token)) {
-                JSONObject jsonObject = JwtManager.parseToken(token);
-                String id = jsonObject.getStr("id");
-                if (StringUtils.isNotBlank(id)) {
-                    UserDetails userDetails = oauthUserDetailsService.getUserDetails(id);
-                    if (userDetails != null) {
-                        UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(userDetails,
-                                userDetails.getPassword(), this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
-                        result.setDetails(this.authenticationDetailsSource.buildDetails(requestResponseHolder.getRequest()));
-                        securityContext.setAuthentication(result);
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            if (log.isDebugEnabled()) {
-                log.debug("JwtManager verify error", ex);
+        if (StringUtils.isBlank(token)) {
+            return securityContext;
+        }
+        if (!JwtManager.verify(token)) {
+            throw new CredentialsExpiredException(StatusCode.AUTHENTICATION_TOKEN_INVALID.name());
+        }
+        if (!JwtManager.validateDate(token)) {
+            throw new CredentialsExpiredException(StatusCode.AUTHENTICATION_TOKEN_EXPIRED.name());
+        }
+        JSONObject jsonObject = JwtManager.parseToken(token);
+        String id = jsonObject.getStr("id");
+        if (StringUtils.isNotBlank(id)) {
+            UserDetails userDetails = oauthUserDetailsService.getUserDetailsById(id);
+            if (userDetails != null) {
+                UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(userDetails,
+                        userDetails.getPassword(), this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
+                result.setDetails(this.authenticationDetailsSource.buildDetails(requestResponseHolder.getRequest()));
+                securityContext.setAuthentication(result);
             }
         }
         return securityContext;

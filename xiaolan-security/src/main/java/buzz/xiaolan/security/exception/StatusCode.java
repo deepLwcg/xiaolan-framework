@@ -34,7 +34,14 @@ public enum StatusCode {
     /**
      * 认证失败
      */
-    AUTHENTICATION_FAILURE(HttpStatus.UNAUTHORIZED, "A0004", "authentication.failure"),
+    AUTHENTICATION_FAILURE(HttpStatus.UNAUTHORIZED, "A0104", "authentication.failure"),
+
+    /**
+     * 邮箱已存在
+     */
+    AUTHENTICATION_EMAIL_EXIST(HttpStatus.UNAUTHORIZED, "A0107", "authentication.email.exist"),
+
+    AUTHENTICATION_PHONE_EXIST(HttpStatus.UNAUTHORIZED, "A0108", "authentication.phone.exist"),
 
     /**
      * 验证码错误
@@ -59,8 +66,19 @@ public enum StatusCode {
 
     AUTHENTICATION_ENTRY_POINT(HttpStatus.UNAUTHORIZED, "A0007", "authentication.entry.point"),
 
+    /**
+     * 无效Token
+     */
+    AUTHENTICATION_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "A0004", "authentication.token.invalid"),
+    /**
+     * Token过期
+     */
+    AUTHENTICATION_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "A0003", "authentication.token.expired"),
+
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "A0000", "internal.server.error"),
+
     ;
+
 
     private final HttpStatus status;
     private final String code;
@@ -68,6 +86,15 @@ public enum StatusCode {
 
     public String getMessage() {
         return LazyHolder.getMessage(message, message,  LocaleContextHolder.getLocale());
+    }
+
+    public static StatusCode NameOf(String name, StatusCode defaultVal) {
+        for (StatusCode value : StatusCode.values()) {
+            if (value.name().equals(name)) {
+                return value;
+            }
+        }
+        return defaultVal;
     }
 
 

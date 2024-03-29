@@ -27,6 +27,7 @@ public class OauthAccessDeniedHandler implements AccessDeniedHandler {
         log.error("OauthAccessDeniedHandler:{}", accessDeniedException.getMessage());
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         String json = JsonUtils.toJson(ApiResponse.fail(StatusCode.ACCESS_DENIED));
+        response.setStatus(StatusCode.ACCESS_DENIED.getStatus().value());
         response.getWriter().write(json);
     }
 }

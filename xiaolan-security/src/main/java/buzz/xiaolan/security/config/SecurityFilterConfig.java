@@ -57,8 +57,14 @@ public class SecurityFilterConfig {
     }
 
     @Bean
-    public CompositeSessionAuthenticationStrategy compositeSessionAuthenticationStrategy() {
+    public ChangeSessionIdAuthenticationStrategy changeSessionIdAuthenticationStrategy(){
         ChangeSessionIdAuthenticationStrategy changeSessionIdAuthenticationStrategy = new ChangeSessionIdAuthenticationStrategy();
+        changeSessionIdAuthenticationStrategy.setAlwaysCreateSession(true);
+        return changeSessionIdAuthenticationStrategy;
+    }
+
+    @Bean
+    public CompositeSessionAuthenticationStrategy compositeSessionAuthenticationStrategy(ChangeSessionIdAuthenticationStrategy changeSessionIdAuthenticationStrategy) {
         return new CompositeSessionAuthenticationStrategy(List.of(changeSessionIdAuthenticationStrategy));
     }
 
@@ -94,7 +100,7 @@ public class SecurityFilterConfig {
                                                                                    AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource,
                                                                                    OauthSmsProcessor oauthSmsProcessor,
                                                                                    OauthEmailProcessor oauthEmailProcessor) {
-        OauthAuthenticationProcessingFilter oauthAuthenticationProcessingFilter = new OauthAuthenticationProcessingFilter(new AntPathRequestMatcher("/login", "POST"),
+        OauthAuthenticationProcessingFilter oauthAuthenticationProcessingFilter = new OauthAuthenticationProcessingFilter(new AntPathRequestMatcher("/oauth/**", "POST"),
                 oauthSmsProcessor, oauthEmailProcessor);
         oauthAuthenticationProcessingFilter.setAuthenticationManager(providerManager);
         oauthAuthenticationProcessingFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
