@@ -1,12 +1,15 @@
 package buzz.xiaolan.security.security;
 
 import buzz.xiaolan.security.exception.StatusCode;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class OauthSecurityContextRepository implements SecurityContextRepository {
 
+    private final TimedCache<String, Authentication> authenticationsCache = CacheUtil.newTimedCache(JwtManager.EXPIRES * 60 * 1000);
+
     public final OauthUserDetailsService oauthUserDetailsService;
     private final AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource;
     private final GrantedAuthoritiesMapper authoritiesMapper;
@@ -38,7 +43,6 @@ public class OauthSecurityContextRepository implements SecurityContextRepository
 
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
-        log.info("loadContext");
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         String token = this.getAuthorizationToken(requestResponseHolder.getRequest());
         if (StringUtils.isBlank(token)) {
@@ -53,12 +57,29 @@ public class OauthSecurityContextRepository implements SecurityContextRepository
         JSONObject jsonObject = JwtManager.parseToken(token);
         String id = jsonObject.getStr("id");
         if (StringUtils.isNotBlank(id)) {
-            UserDetails userDetails = oauthUserDetailsService.getUserDetailsById(id);
+            UserDetails userDetails = null;
+            if (authenticationsCache.containsKey(id)) {
+                Authentication authentication = authenticationsCache.get(id);
+                if (authentication != null && authentication.isAuthenticated()) {
+                    Object principal = authentication.getPrincipal();
+                    if (principal instanceof UserInfo userInfo) {
+                        userDetails = userInfo;
+                    }
+                }
+            }
+            boolean addCache = false;
+            if (userDetails == null){
+                userDetails = oauthUserDetailsService.getUserDetailsById(id);
+                addCache = true;
+            }
             if (userDetails != null) {
                 UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(userDetails,
                         userDetails.getPassword(), this.authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
                 result.setDetails(this.authenticationDetailsSource.buildDetails(requestResponseHolder.getRequest()));
                 securityContext.setAuthentication(result);
+                if (addCache){
+                    authenticationsCache.put(id, result);
+                }
             }
         }
         return securityContext;
@@ -66,7 +87,15 @@ public class OauthSecurityContextRepository implements SecurityContextRepository
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-
+        Authentication authentication = context.getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserInfo userInfo) {
+                if (userInfo.getId() != null) {
+                    authenticationsCache.put(userInfo.getId(), authentication);
+                }
+            }
+        }
     }
 
     @Override

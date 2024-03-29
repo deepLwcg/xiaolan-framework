@@ -6,6 +6,7 @@ import buzz.xiaolan.security.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @Date 2024/3/26
  * @Description OauthUserDetailsService
  */
+@Slf4j
 @Component
 public class OauthUserDetailsService extends ServiceImpl<UserMapper, User> implements UserDetailsService, IService<User> {
 
@@ -35,6 +37,7 @@ public class OauthUserDetailsService extends ServiceImpl<UserMapper, User> imple
     }
 
     public UserDetails getUserDetailsById(String id) {
+        log.warn("getUserDetailsById: {}", id);
         return Optional.ofNullable(getById(id)).map(UserInfo::new).orElse(null);
     }
 
