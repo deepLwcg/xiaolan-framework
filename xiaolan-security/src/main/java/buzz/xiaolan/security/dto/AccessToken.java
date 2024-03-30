@@ -1,5 +1,6 @@
 package buzz.xiaolan.security.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -12,10 +13,13 @@ import lombok.Data;
 @Data(staticConstructor = "of")
 public class AccessToken {
 
+    @JsonProperty("access_token")
     private final String accessToken;
 
+    @JsonProperty("refresh_token")
     private final String refreshToken;
 
+    @JsonProperty("expires_in")
     private final Long expiresIn;
 
 
