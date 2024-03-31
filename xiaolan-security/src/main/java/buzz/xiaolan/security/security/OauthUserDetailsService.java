@@ -37,7 +37,6 @@ public class OauthUserDetailsService extends ServiceImpl<UserMapper, User> imple
     }
 
     public UserDetails getUserDetailsById(String id) {
-        log.warn("getUserDetailsById: {}", id);
         return Optional.ofNullable(getById(id)).map(UserInfo::new).orElse(null);
     }
 
