@@ -1,4 +1,4 @@
-package buzz.xiaolan.security.contexts;
+package buzz.xiaolan.oauth.contexts;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;

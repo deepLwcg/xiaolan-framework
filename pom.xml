@@ -20,6 +20,8 @@
         <module>xiaolan-poi</module>
         <module>xiaolan-floating-box</module>
         <module>xiaolan-security</module>
+        <module>xiaolan-oauth</module>
+        <module>xiaolan-oauth-client</module>
     </modules>
 
     <properties>
